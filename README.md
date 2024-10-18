@@ -1,24 +1,32 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Details
 
-Things you may want to cover:
+This is an agnostic Rails 7 app with postgress as database and rspec for running tests
 
-* Ruby version
+## Setup
 
-* System dependencies
+This application is prepared to be used with docker and docker compose. It uses ruby 3.3.5-slim and posgress:14.2 images.
 
-* Configuration
+Prepare `.env`file following `.env.example`model.
 
-* Database creation
+Then build the docker image:
+`docker compose build`
 
-* Database initialization
+Create the database:
+`docker compose run web db:create`
 
-* How to run the test suite
+Run migrations:
+`docker compose run web db:migrate`
 
-* Services (job queues, cache servers, search engines, etc.)
 
-* Deployment instructions
+# Run the app
 
-* ...
+Launch the app:
+`docker compose up`
+
+
+## Run test
+
+Execute:
+`docker compose run web rspec`
