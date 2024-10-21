@@ -1,6 +1,7 @@
 class Merchant < ApplicationRecord
   # Relationships
   has_many :disbursements, dependent: :destroy
+  has_many :orders, dependent: :destroy
 
   # Enum for faster db queries
   enum disbursement_frequency: { daily: 1, weekly: 2 }
