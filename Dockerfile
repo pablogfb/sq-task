@@ -4,8 +4,7 @@ FROM registry.docker.com/library/ruby:3.3.5-slim AS base
 
 WORKDIR /rails
 
-ENV RAILS_ENV="development" \
-    BUNDLE_DEPLOYMENT="1" \
+ENV BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" 
 
 FROM base AS build
