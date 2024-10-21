@@ -9,4 +9,8 @@ RSpec.describe Merchant, type: :model do
     it { should validate_presence_of(:disbursement_frequency) }
     it { should validate_presence_of(:minimum_monthly_fee) }
   end
+  describe 'associations' do
+    it { should respond_to(:orders) }
+    it { should respond_to(:disbursements) }
+  end
 end
