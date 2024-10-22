@@ -10,7 +10,13 @@ class Merchant < ApplicationRecord
   validates :reference, :email, :live_on, :disbursement_frequency, :minimum_monthly_fee, presence: true
   validates :reference, uniqueness: true
 
+  # Scopes
+  scope :active, -> { where("live_on <= ?", Time.now) }
+
   # Methods
+  def active?
+    live_on <= Time.now
+  end
   def disbursable?
     return true  if disbursements == []
     disbursements.last.disbursed_at < (weekly? ? 7.days.ago : 1.day.ago)
