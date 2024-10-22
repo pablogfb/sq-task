@@ -3,5 +3,4 @@ class Disbursement < ApplicationRecord
   has_many :orders
 
   validates_presence_of :merchant
-  validates_absence_of :disbursed_at, on: :create
 end

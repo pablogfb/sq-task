@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Disbursement, type: :model do
   describe 'validations' do
-    it { should validate_absence_of(:disbursed_at).on(:create) }
+    it { should validate_presence_of(:merchant).on(:create) }
   end
 
   describe 'associations' do
