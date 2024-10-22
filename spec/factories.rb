@@ -14,4 +14,8 @@ FactoryBot.define do
     amount { Faker::Number.decimal(r_digits: 2) }
     disbursed { false }
   end
+
+  factory :disbursement do
+    merchant
+  end
 end
