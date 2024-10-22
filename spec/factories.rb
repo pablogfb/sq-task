@@ -8,4 +8,10 @@ FactoryBot.define do
     disbursement_frequency { 1 }
     minimum_monthly_fee { 29.0 }
   end
+
+  factory :order do
+    merchant
+    amount { Faker::Number.decimal(r_digits: 2) }
+    disbursed { false }
+  end
 end

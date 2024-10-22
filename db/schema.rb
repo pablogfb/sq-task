@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_21_102813) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_22_084105) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,6 +19,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_21_102813) do
     t.datetime "disbursed_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "disbursed_amount"
+    t.float "fee_amount"
     t.index ["merchant_id"], name: "index_disbursements_on_merchant_id"
   end
 
