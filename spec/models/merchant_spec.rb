@@ -47,31 +47,27 @@ RSpec.describe Merchant, type: :model do
 
     it 'returns false on disbursement if not disbursable' do
       merchant = create(:merchant)
+      # By default disbursed_at is set to Time.now on creation
       merchant.disbursements = [ Disbursement.new(
-                                        merchant: merchant,
-                                        disbursed_at: 12.hours.ago
+                                        merchant: merchant
                                       )
                                 ]
       expect(merchant.disburse).to eq(false)
     end
 
-    it 'returns a disbursement if disbursable' do
+    it 'returns a true if disbursable' do
       merchant = create(:merchant)
-      merchant.disbursements = [ Disbursement.new(
-                                        merchant: merchant,
-                                        disbursed_at: 25.hours.ago
-                                      )
-                                ]
+      disbursement = Disbursement.new(merchant: merchant)
+      merchant.disbursements = [ disbursement ]
+      disbursement.update(disbursed_at: 25.hours.ago)
       expect(merchant.disburse).to eq(true)
     end
 
     it 'should create a new disbursement if disbursable' do
       merchant = create(:merchant)
-      merchant.disbursements = [ Disbursement.new(
-                                        merchant: merchant,
-                                        disbursed_at: 25.hours.ago
-                                      )
-                                ]
+      disbursement = Disbursement.new(merchant: merchant)
+      merchant.disbursements = [ disbursement ]
+      disbursement.update(disbursed_at: 25.hours.ago)
       merchant.disburse
       expect(merchant.disbursements.count).to eq(2)
     end
