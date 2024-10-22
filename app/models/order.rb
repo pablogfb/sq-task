@@ -1,7 +1,7 @@
 class Order < ApplicationRecord
   # Associations
   belongs_to :merchant
-  belongs_to :disbursement
+  belongs_to :disbursement, optional: true
 
   # Validations
   validates :merchant_id, presence: true
