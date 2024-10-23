@@ -23,53 +23,50 @@ RSpec.describe Merchant, type: :model do
   end
 
   describe 'disbursement methods' do
+    before(:each) do
+      @merchant = create(:merchant, disbursement_frequency: :daily)
+      @disbursement = create(:disbursement, merchant: @merchant)
+    end
+
     it 'disbursable? should return true if disbursable' do
-      merchant = build(:merchant)
-      merchant.disbursement_frequency = :weekly
-      merchant.disbursements = [ Disbursement.new(
-                                                    merchant: merchant,
-                                                    disbursed_at: 7.days.ago
-                                                  )
-                                ]
-      expect(merchant.disbursable?).to eq(true)
+      @disbursement.update(disbursed_at: 2.days.ago)
+      expect(@merchant.disbursable?).to eq(true)
     end
 
     it 'disbursable? should return false if not disbursable' do
-      merchant = build(:merchant)
-      merchant.disbursement_frequency = :weekly
-      merchant.disbursements = [ Disbursement.new(
-                                        merchant: merchant,
-                                        disbursed_at: 2.days.ago
-                                      )
-                                ]
-      expect(merchant.disbursable?).to eq(false)
+      @merchant.update(disbursement_frequency: :weekly)
+      expect(@merchant.disbursable?).to eq(false)
     end
 
     it 'returns false on disbursement if not disbursable' do
-      merchant = create(:merchant)
-      # By default disbursed_at is set to Time.now on creation
-      merchant.disbursements = [ Disbursement.new(
-                                        merchant: merchant
-                                      )
-                                ]
-      expect(merchant.disburse).to eq(false)
+      @merchant.update(disbursement_frequency: :weekly)
+      expect(@merchant.disburse(Time.now)).to eq(false)
     end
 
     it 'returns a true if disbursable' do
-      merchant = create(:merchant)
-      disbursement = Disbursement.new(merchant: merchant)
-      merchant.disbursements = [ disbursement ]
-      disbursement.update(disbursed_at: 25.hours.ago)
-      expect(merchant.disburse).to eq(true)
+      @disbursement.update(disbursed_at: 2.days.ago)
+      expect(@merchant.disburse(Time.now)).to eq(true)
     end
 
     it 'should create a new disbursement if disbursable' do
-      merchant = create(:merchant)
-      disbursement = Disbursement.new(merchant: merchant)
-      merchant.disbursements = [ disbursement ]
-      disbursement.update(disbursed_at: 25.hours.ago)
-      merchant.disburse
-      expect(merchant.disbursements.count).to eq(2)
+      @disbursement.update(disbursed_at: 2.days.ago)
+      create(:order, merchant: @merchant)
+      @merchant.disburse(Time.now)
+      expect(@merchant.disbursements.count).to eq(2)
+    end
+
+    it 'historicaly_disbursable? should return true if disbursable' do
+      @disbursement.update(disbursed_at: 1.month.ago)
+      @merchant.update(live_on: 2.months.ago)
+      start_date = 1.month.ago + 1.day
+      expect(@merchant.disbursable?(start_date)).to eq(true)
+    end
+
+    it 'historicaly_disbursable? should return false if not disbursable' do
+      @disbursement.update(disbursed_at: 1.month.ago)
+      @merchant.update(live_on: 2.months.ago, disbursement_frequency: :weekly)
+      start_date = 1.month.ago + 1.day
+      expect(@merchant.disbursable?(start_date)).to eq(false)
     end
   end
 end
