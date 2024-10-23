@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_22_084105) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_23_190121) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,8 +19,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_22_084105) do
     t.datetime "disbursed_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.float "disbursed_amount"
-    t.float "fee_amount"
+    t.integer "disbursed_amount"
+    t.integer "fee_amount"
     t.index ["merchant_id"], name: "index_disbursements_on_merchant_id"
   end
 
@@ -29,16 +29,16 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_22_084105) do
     t.string "email", null: false
     t.datetime "live_on", precision: nil, null: false
     t.integer "disbursement_frequency", default: 1, null: false
-    t.float "minimum_monthly_fee", default: 0.0, null: false
+    t.integer "minimum_monthly_fee", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "orders", force: :cascade do |t|
     t.bigint "merchant_id", null: false
-    t.float "amount"
+    t.integer "amount"
     t.boolean "disbursed", default: false, null: false
-    t.float "disbursed_fee"
+    t.integer "disbursed_fee"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "disbursement_id"

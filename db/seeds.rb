@@ -10,7 +10,7 @@ CSV.parse(csv_content, headers: true, col_sep: ';').each do |row|
   merchant.email = row['email']
   merchant.live_on = Date.parse(row['live_on'])
   merchant.disbursement_frequency = row['disbursement_frequency'] == 'WEEKLY' ? :weekly : :daily
-  merchant.minimum_monthly_fee = row['minimum_monthly_fee'].to_f
+  merchant.minimum_monthly_fee = row['minimum_monthly_fee'].to_f * 100
   merchant.save
   merchants += 1
 end
@@ -43,7 +43,7 @@ def import_csv(file_path)
 
   # Insert the data into the final table with the correct merchant_id
   insert_sql = "INSERT INTO orders (merchant_id, amount, created_at, updated_at)
-    SELECT m.id, t.amount, t.created_at, t.created_at
+    SELECT m.id, t.amount * 100, t.created_at, t.created_at
     FROM temp_table t
     JOIN merchants m ON t.merchant_reference = m.reference;"
   ActiveRecord::Base.connection.execute(insert_sql)

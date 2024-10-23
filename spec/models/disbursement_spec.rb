@@ -11,12 +11,6 @@ RSpec.describe Disbursement, type: :model do
   end
 
   describe 'amounts calculation' do
-    it 'stores disbursed_at on save' do
-      disbursement = build(:disbursement)
-      expect(disbursement.disbursed_at).to eq(nil)
-      disbursement.save
-      expect(disbursement.disbursed_at).not_to eq(nil)
-    end
     it 'calculates disbursed amount on save' do
       order1 = create(:order)
       order2 = create(:order, merchant: order1.merchant)

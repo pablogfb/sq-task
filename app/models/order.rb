@@ -16,13 +16,13 @@ class Order < ApplicationRecord
 
   def calc_disbursed_fee
     percentage =  case amount
-                  when 0...50 then 0.01
-                  when 50...300 then 0.0095
+                  when 0...5000 then 0.01
+                  when 5000...30000 then 0.0095
                   else 0.0085
                   end # rubocop:disable Layout/EndAlignment
 
     # Calculate fee rounding always up
-    self.disbursed_fee = (amount * percentage)
+    self.disbursed_fee = (amount * percentage).ceil(0)
     self.save
   end
 end
