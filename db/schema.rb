@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_23_190121) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_24_055708) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,6 +22,15 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_23_190121) do
     t.integer "disbursed_amount"
     t.integer "fee_amount"
     t.index ["merchant_id"], name: "index_disbursements_on_merchant_id"
+  end
+
+  create_table "fee_adjustments", force: :cascade do |t|
+    t.bigint "merchant_id", null: false
+    t.datetime "adjustment_date", precision: nil
+    t.integer "adjustment_amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["merchant_id"], name: "index_fee_adjustments_on_merchant_id"
   end
 
   create_table "merchants", force: :cascade do |t|
@@ -47,6 +56,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_23_190121) do
   end
 
   add_foreign_key "disbursements", "merchants"
+  add_foreign_key "fee_adjustments", "merchants"
   add_foreign_key "orders", "disbursements"
   add_foreign_key "orders", "merchants"
 end

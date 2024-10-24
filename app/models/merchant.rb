@@ -2,6 +2,7 @@ class Merchant < ApplicationRecord
   # Relationships
   has_many :disbursements, dependent: :destroy
   has_many :orders, dependent: :destroy
+  has_many :fee_adjustments, dependent: :destroy
 
   # Enum for faster db queries
   enum :disbursement_frequency, { daily: 1, weekly: 2 }
@@ -49,5 +50,18 @@ class Merchant < ApplicationRecord
     # Last disbursment was older than period?
     time_ago = date.beginning_of_day - (weekly? ? 7 : 1).days
     latest_disbursement.disbursed_at.beginning_of_day <= time_ago
+  end
+
+  # Create if fee adjustment is needed on the provided date
+  def check_fee_adjustment(date)
+    monthly_disbursements = disbursements.where(disbursed_at: date.all_month()).sum(:fee_amount)
+    if monthly_disbursements < minimum_monthly_fee
+      fee_adjustment = FeeAdjustment.new(
+        merchant: self,
+        adjustment_date: date.beginning_of_month,
+        adjustment_amount: (minimum_monthly_fee - monthly_disbursements)
+      )
+      fee_adjustment.save
+    end
   end
 end

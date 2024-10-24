@@ -1,6 +1,12 @@
 require 'faker'
 
 FactoryBot.define do
+  factory :fee_adjustment do
+    merchant
+    adjustment_date { Faker::Date }
+    adjustment_amount { Faker::Number.between(from: 0, to: 100000) }
+  end
+
   factory :merchant do
     reference { Faker::Company.name }
     email { Faker::Internet.email }

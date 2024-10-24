@@ -51,8 +51,7 @@ RSpec.describe Merchant, type: :model do
     it 'should create a new disbursement if disbursable' do
       @disbursement.update(disbursed_at: 2.days.ago)
       create(:order, merchant: @merchant)
-      @merchant.disburse(Time.now)
-      expect(@merchant.disbursements.count).to eq(2)
+      expect { @merchant.disburse(Time.now) }.to change(@merchant.disbursements, :count).by(1)
     end
 
     it 'historicaly_disbursable? should return true if disbursable' do
@@ -67,6 +66,21 @@ RSpec.describe Merchant, type: :model do
       @merchant.update(live_on: 2.months.ago, disbursement_frequency: :weekly)
       start_date = 1.month.ago + 1.day
       expect(@merchant.disbursable?(start_date)).to eq(false)
+    end
+  end
+  describe "#check_fee_adjustment" do
+    it "should create a fee adjustment if the merchant's monthly disbursements are less than the minimum monthly fee" do
+      merchant = create(:merchant, minimum_monthly_fee: 10)
+      create(:order, merchant: merchant, amount: 150)
+      merchant.disburse(Time.now)
+      expect { merchant.check_fee_adjustment(Time.now) }.to change(FeeAdjustment, :count).by(1)
+    end
+
+    it "should not create a fee adjustment if the merchant's monthly disbursements are greater than or equal to the minimum monthly fee" do
+      merchant = create(:merchant, minimum_monthly_fee: 10)
+      create(:order, merchant: merchant, amount: 10000000)
+      merchant.disburse(Time.now)
+      expect { merchant.check_fee_adjustment(Time.now) }.not_to change(FeeAdjustment, :count)
     end
   end
 end
