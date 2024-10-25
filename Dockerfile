@@ -10,7 +10,7 @@ ENV BUNDLE_DEPLOYMENT="1" \
 FROM base AS build
 
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev libvips pkg-config curl ca-certificates 
+    apt-get install --no-install-recommends -y build-essential git libpq-dev libvips pkg-config curl ca-certificates cron
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
@@ -30,14 +30,19 @@ FROM base
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libvips postgresql-client && \
+    apt-get install --no-install-recommends -y curl libvips postgresql-client cron && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copy built artifacts: gems, application
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
 
-
+# Update crontab file using whenever command
+ARG CRONTAB
+RUN if [ "${CRONTAB}" = "true" ]; then \
+    cd /rails && \
+    bundle exec whenever --update-crontab; \
+fi
 
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
