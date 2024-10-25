@@ -7,7 +7,6 @@ class Order < ApplicationRecord
   validates :merchant_id, presence: true
   validates :disbursed, inclusion: { in: [ true, false ] }
   validates_absence_of :disbursement, on: :create
-  validates :amount, numericality: { decimal: true, greater_than: 0 }
 
   # Methods
   def disbursable?

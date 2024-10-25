@@ -18,8 +18,9 @@ RSpec.describe Merchant, type: :model do
     it { should be_valid }
   end
   describe 'associations' do
-    it { should respond_to(:orders) }
-    it { should respond_to(:disbursements) }
+    it { should have_many(:disbursements).dependent(:destroy) }
+    it { should have_many(:orders).dependent(:destroy) }
+    it { should have_many(:fee_adjustments).dependent(:destroy) }
   end
 
   describe 'disbursement methods' do
