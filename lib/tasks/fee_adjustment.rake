@@ -8,7 +8,7 @@ namespace :tasks do
     end
 
     # Historical monthly fee adjustments
-    task historic_monthly_fee_adjustments: :environment do
+    task historical_monthly_fee_adjustments: :environment do
       Merchant.all.each do |merchant|
         puts " ====================== Start Merchant: #{merchant.reference} ======================"
         date = merchant.live_on
