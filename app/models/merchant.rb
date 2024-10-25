@@ -54,7 +54,8 @@ class Merchant < ApplicationRecord
 
   # Create if fee adjustment is needed on the provided date
   def check_fee_adjustment(date)
-    monthly_disbursements = disbursements.where(disbursed_at: date.all_month()).sum(:fee_amount)
+    return false if fee_adjustments.where(adjustment_date: date.all_month).any?
+    monthly_disbursements = disbursements.where(disbursed_at: date.all_month).sum(:fee_amount)
     if monthly_disbursements < minimum_monthly_fee
       fee_adjustment = FeeAdjustment.new(
         merchant: self,

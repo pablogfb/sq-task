@@ -26,8 +26,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_24_055708) do
 
   create_table "fee_adjustments", force: :cascade do |t|
     t.bigint "merchant_id", null: false
-    t.datetime "adjustment_date", precision: nil
-    t.integer "adjustment_amount"
+    t.datetime "adjustment_date", precision: nil, null: false
+    t.integer "adjustment_amount", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["merchant_id"], name: "index_fee_adjustments_on_merchant_id"

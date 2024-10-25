@@ -82,5 +82,14 @@ RSpec.describe Merchant, type: :model do
       merchant.disburse(Time.now)
       expect { merchant.check_fee_adjustment(Time.now) }.not_to change(FeeAdjustment, :count)
     end
+
+    it "should not create a fee adjustment if already one exists for the month" do
+      merchant = create(:merchant, minimum_monthly_fee: 10)
+      create(:order, merchant: merchant, amount: 10)
+      date = Time.now
+      merchant.disburse(date)
+      merchant.check_fee_adjustment(date)
+      expect { merchant.check_fee_adjustment(date) }.not_to change(FeeAdjustment, :count)
+    end
   end
 end
