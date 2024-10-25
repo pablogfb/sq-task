@@ -8,6 +8,25 @@ services:
       - .env
     networks:
       - mainNetwork
+  redis:
+    image: 'redis'
+    ports:
+      - 6379
+    command: redis-server
+    networks:
+      - mainNetwork
+
+  sidekiq:
+    depends_on:
+      - 'redis'
+    build: .
+    command: bundle exec sidekiq
+    volumes:
+      - .:/rails
+    env_file:
+      - .env
+    networks:
+      - mainNetwork
   web:
     build: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"

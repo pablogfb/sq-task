@@ -17,6 +17,9 @@ gem "bootsnap", require: false
 # Cron jobs
 gem "whenever", require: false
 
+# Background jobs
+gem "sidekiq", require: false
+
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -30,6 +33,7 @@ end
 group :development do
   gem "web-console"
   gem "error_highlight", ">= 0.4.0", platforms: [:ruby]
+  gem "console_table"
 end
 
 group :test do
