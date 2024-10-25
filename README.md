@@ -56,6 +56,8 @@ docker compose -f docker-compose.test.yml run web bundle exec rake db:migrate
 docker compose -f docker-compose.test.yml run web bundle exec rspec
 ```
 
+A group of 40+ tests has been created to cover the core functionality of the application, including data structure, validations, and methods. These tests provide a foundational assessment of key areas. Depending on the final use cases, additional tests may be needed to address specific edge cases.
+
 # Technical choices
 
 ## Stack
@@ -84,6 +86,8 @@ on sample that importing).
 
 Usualy it isn't a good idea to store calculated data but we are dealing with money and we need a very high reliability
 and quick searching.
+
+I have added some flags like `disbursed: boolean`or `disbursed_at: timestamp` for faster quering.
 
 Order model includes `amount` and calculated `disbursed_fee`. In the future the fee rates could be modified so it is a good
 idea to store the actual fee charged to the merchant.
